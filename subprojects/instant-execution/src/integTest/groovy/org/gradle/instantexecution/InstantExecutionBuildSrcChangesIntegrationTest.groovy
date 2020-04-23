@@ -91,7 +91,7 @@ class InstantExecutionBuildSrcChangesIntegrationTest extends AbstractInstantExec
                 override fun obtain(): String? = System.getProperty("test_is_ci", null)
             }
 
-            val isCi = $inputExpression
+            val isCi = ${inputExpression}.forUseAtConfigurationTime()
             tasks {
                 if (isCi.isPresent) {
                     register("run") {
