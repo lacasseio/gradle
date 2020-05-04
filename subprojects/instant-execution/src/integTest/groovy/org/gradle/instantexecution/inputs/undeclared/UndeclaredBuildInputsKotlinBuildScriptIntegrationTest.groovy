@@ -20,21 +20,12 @@ class UndeclaredBuildInputsKotlinBuildScriptIntegrationTest extends AbstractUnde
     @Override
     void buildLogicApplication() {
         buildKotlinFile << """
-            plugins {
-                println("apply BUILDSCRIPT = " + System.getProperty("BUILDSCRIPT"))
+            println("apply CI = " + System.getProperty("CI"))
+            tasks.register("thing") {
+                doLast {
+                    println("task CI = " + System.getProperty("CI"))
+                }
             }
         """
-        kotlinPlugin(buildKotlinFile)
-        buildKotlinFile << """
-            println("apply SCRIPT = " + System.getProperty("SCRIPT"))
-
-            plugins.apply(SneakyPlugin::class.java)
-        """
-    }
-
-    @Override
-    void additionalProblems() {
-        outputContains("- unknown location: read system property 'BUILDSCRIPT' from '")
-        outputContains("- unknown location: read system property 'SCRIPT' from '")
     }
 }

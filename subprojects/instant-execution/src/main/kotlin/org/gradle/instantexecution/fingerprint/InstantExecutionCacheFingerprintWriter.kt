@@ -25,6 +25,7 @@ import org.gradle.api.internal.provider.sources.FileContentValueSource
 import org.gradle.api.provider.ValueSourceParameters
 import org.gradle.groovy.scripts.ScriptSource
 import org.gradle.initialization.DefaultSettingsLoader.BUILD_SRC_PROJECT_PATH
+import org.gradle.instantexecution.UndeclaredBuildInputListener
 import org.gradle.instantexecution.extensions.uncheckedCast
 import org.gradle.instantexecution.fingerprint.InstantExecutionCacheFingerprint.InputFile
 import org.gradle.instantexecution.fingerprint.InstantExecutionCacheFingerprint.ValueSource
@@ -39,7 +40,7 @@ internal
 class InstantExecutionCacheFingerprintWriter(
     private val host: Host,
     private val writeContext: DefaultWriteContext
-) : ValueSourceProviderFactory.Listener, TaskInputsListener, ScriptExecutionListener {
+) : ValueSourceProviderFactory.Listener, TaskInputsListener, ScriptExecutionListener, UndeclaredBuildInputListener {
 
     interface Host {
 
@@ -61,7 +62,7 @@ class InstantExecutionCacheFingerprintWriter(
         capturedFiles = newConcurrentHashSet(initScripts)
         write(
             InstantExecutionCacheFingerprint.InitScripts(
-                initScripts.map { host.hashCodeOf(it) }
+                initScripts.map(::inputFile)
             )
         )
     }
@@ -74,6 +75,10 @@ class InstantExecutionCacheFingerprintWriter(
     fun close() {
         write(null)
         writeContext.close()
+    }
+
+    override fun systemPropertyRead(key: String) {
+        write(InstantExecutionCacheFingerprint.UndeclaredSystemProperty(key))
     }
 
     override fun <T : Any, P : ValueSourceParameters> valueObtained(
@@ -110,17 +115,17 @@ class InstantExecutionCacheFingerprintWriter(
 
     private
     fun captureFile(file: File) {
-
         if (!capturedFiles.add(file))
             return
-
-        write(
-            InputFile(
-                file,
-                host.hashCodeOf(file)
-            )
-        )
+        write(inputFile(file))
     }
+
+    private
+    fun inputFile(file: File) =
+        InputFile(
+            file,
+            host.hashCodeOf(file)
+        )
 
     private
     fun captureTaskInputs(task: TaskInternal, fileSystemInputs: FileCollectionInternal) {

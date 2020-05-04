@@ -27,7 +27,7 @@ internal
 sealed class InstantExecutionCacheFingerprint {
 
     data class InitScripts(
-        val hashes: List<HashCode?>
+        val fingerprints: List<InputFile>
     ) : InstantExecutionCacheFingerprint()
 
     data class TaskInputs(
@@ -43,6 +43,10 @@ sealed class InstantExecutionCacheFingerprint {
 
     data class ValueSource(
         val obtainedValue: ObtainedValue
+    ) : InstantExecutionCacheFingerprint()
+
+    data class UndeclaredSystemProperty(
+        val key: String
     ) : InstantExecutionCacheFingerprint()
 }
 
