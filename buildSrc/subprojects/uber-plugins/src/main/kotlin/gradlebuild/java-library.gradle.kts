@@ -15,8 +15,6 @@
  */
 package gradlebuild
 
-import org.gradle.kotlin.dsl.*
-
 plugins {
     `java-library`
     id("gradlebuild.repositories")
@@ -48,6 +46,11 @@ if (file("src/performanceTest").isDirectory) {
 
 if (file("src/jmh").isDirectory) {
     apply(plugin = "gradlebuild.jmh")
+    configurations.named("jmhRuntime") {
+        attributes {
+            attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
+        }
+    }
 }
 
 tasks.named("check").configure {
