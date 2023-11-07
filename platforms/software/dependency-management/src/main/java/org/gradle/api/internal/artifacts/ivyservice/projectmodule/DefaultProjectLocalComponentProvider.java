@@ -15,6 +15,8 @@
  */
 package org.gradle.api.internal.artifacts.ivyservice.projectmodule;
 
+import com.google.common.collect.ImmutableList;
+import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.ModuleVersionIdentifier;
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier;
 import org.gradle.api.internal.artifacts.ImmutableModuleIdentifierFactory;
@@ -30,6 +32,8 @@ import org.gradle.internal.component.local.model.LocalComponentGraphResolveState
 import org.gradle.internal.component.local.model.LocalComponentGraphResolveStateFactory;
 import org.gradle.internal.component.local.model.LocalComponentMetadata;
 import org.gradle.internal.model.CalculatedValueContainerFactory;
+
+import java.util.List;
 
 /**
  * Provides the metadata for a component consumed from the same build that produces it.
@@ -71,7 +75,12 @@ public class DefaultProjectLocalComponentProvider implements LocalComponentProvi
             new DefaultLocalComponentMetadata.ConfigurationsProviderMetadataFactory(
                 (DefaultConfigurationContainer) project.getConfigurations(), metadataBuilder, projectState, calculatedValueContainerFactory);
 
-        project.getConfigurations().forEach(conf -> ((ConfigurationInternal) conf).preventFromFurtherMutation());
+        for (int i = 0; i < project.getConfigurations().size(); ++i) {
+            final List<Configuration> configurations = ImmutableList.copyOf(project.getConfigurations());
+            for (; i < configurations.size(); ++i) {
+                ((ConfigurationInternal) configurations.get(i)).preventFromFurtherMutation();
+            }
+        }
 
         return new DefaultLocalComponentMetadata(moduleVersionIdentifier, componentIdentifier, module.getStatus(), schema, configurationMetadataFactory, null);
     }

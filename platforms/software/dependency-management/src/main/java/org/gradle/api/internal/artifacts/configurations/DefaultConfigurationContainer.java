@@ -42,8 +42,10 @@ import org.gradle.internal.reflect.Instantiator;
 import org.gradle.util.GradleVersion;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -99,8 +101,11 @@ public class DefaultConfigurationContainer extends AbstractValidatingNamedDomain
 
     @Override
     public void visitAll(Consumer<ConfigurationInternal> visitor) {
-        for (Configuration configuration : this) {
-            visitor.accept((ConfigurationInternal) configuration);
+        for (int i = 0; i < this.size(); ++i) {
+            final List<Configuration> configurations = new ArrayList<>(this);
+            for (; i < configurations.size(); ++i) {
+                visitor.accept((ConfigurationInternal) configurations.get(i));
+            }
         }
     }
 
