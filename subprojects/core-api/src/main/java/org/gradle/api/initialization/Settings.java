@@ -24,6 +24,7 @@ import org.gradle.api.file.BuildLayout;
 import org.gradle.api.initialization.dsl.ScriptHandler;
 import org.gradle.api.initialization.resolve.DependencyResolutionManagement;
 import org.gradle.api.invocation.Gradle;
+import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.plugins.ExtensionAware;
 import org.gradle.api.plugins.PluginAware;
 import org.gradle.api.provider.Provider;
@@ -286,6 +287,13 @@ public interface Settings extends PluginAware, ExtensionAware {
      * @since 6.8
      */
     ProviderFactory getProviders();
+
+    /**
+     * Provides access to methods to create various kinds of model objects.
+     *
+     * @since 8.7
+     */
+    ObjectFactory getObjects();
 
     /**
      * Returns the {@link Gradle} instance for the current build.

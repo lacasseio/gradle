@@ -36,6 +36,7 @@ import org.gradle.api.internal.plugins.DefaultObjectConfigurationAction;
 import org.gradle.api.internal.plugins.PluginManagerInternal;
 import org.gradle.api.internal.project.AbstractPluginAware;
 import org.gradle.api.internal.project.ProjectRegistry;
+import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.ProviderFactory;
 import org.gradle.api.toolchain.management.ToolchainManagement;
 import org.gradle.caching.configuration.BuildCacheConfiguration;
@@ -265,6 +266,10 @@ public abstract class DefaultSettings extends AbstractPluginAware implements Set
     @Override
     @Inject
     public abstract ProviderFactory getProviders();
+
+    @Override
+    @Inject
+    public abstract ObjectFactory getObjects();
 
     @Inject
     public abstract ProjectDescriptorRegistry getProjectDescriptorRegistry();

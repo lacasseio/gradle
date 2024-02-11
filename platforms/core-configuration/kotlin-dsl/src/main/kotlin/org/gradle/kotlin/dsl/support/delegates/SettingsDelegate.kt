@@ -156,6 +156,9 @@ abstract class SettingsDelegate : Settings {
     override fun getProviders(): ProviderFactory =
         delegate.providers
 
+    override fun getObjects(): ObjectFactory =
+        delegate.objects
+
     override fun dependencyResolutionManagement(dependencyResolutionConfiguration: Action<in DependencyResolutionManagement>) =
         delegate.dependencyResolutionManagement(dependencyResolutionConfiguration)
 

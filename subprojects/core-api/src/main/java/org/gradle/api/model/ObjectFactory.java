@@ -30,6 +30,7 @@ import org.gradle.api.file.ConfigurableFileTree;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.file.SourceDirectorySet;
+import org.gradle.api.initialization.Settings;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
@@ -47,7 +48,7 @@ import java.util.Set;
  * A factory for creating various kinds of model objects.
  * <p>
  * An instance of the factory can be injected into a task, plugin or other object by annotating a public constructor or property getter method with {@code javax.inject.Inject}.
- * It is also available via {@link org.gradle.api.Project#getObjects()}.
+ * It is also available via {@link org.gradle.api.Project#getObjects()}  and {@link Settings#getObjects()}.
  *
  * @since 4.0
  */
